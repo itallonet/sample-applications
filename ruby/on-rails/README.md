@@ -1,24 +1,46 @@
-# README
+<p align="center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Ruby_On_Rails_Logo.svg/128px-Ruby_On_Rails_Logo.svg.png" alt="project-image"></p><br />
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+<p id="description" align="center">Ruby On Rails Application</p><br />
 
-Things you may want to cover:
+<p align="center"><img src="https://img.shields.io/github/contributors/itallorian/sample-applications?color=dark-green" alt="shields"><img src="https://img.shields.io/github/forks/itallorian/sample-applications?style=social" alt="shields"></p><br /><br />
 
-* Ruby version
+<h2>🧐 Features</h2>
 
-* System dependencies
+Here're some of the project's best features:
 
-* Configuration
+<h2>🛠️ Installation Steps:</h2>
 
-* Database creation
+<p>1. Installing Ruby</p>
 
-* Database initialization
+```
+ruby --version
+```
 
-* How to run the test suite
+<br /><p>2. Installing SQLite3</p>
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+sqlite3 --version
+```
 
-* Deployment instructions
+<br /><p>3. Installing Rails</p>
 
-* ...
+```
+gem install rails
+```
+
+<br /><p>4. Migrate Databse</p>
+```
+ruby bin/rails db:migrate
+```
+
+<br /><p>5. Starting Up the Web Server</p>
+
+```
+ruby bin/rails server
+```
+
+<br /><p>6. Open Browser</p>
+
+```
+http://localhost:3000
+```
