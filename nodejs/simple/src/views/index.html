@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplicativo To-Do</title>
+</head>
+<body>
+  <h1>Lista de Tarefas</h1>
+
+  <ul id="tarefas-lista">
+    <!-- As tarefas serão carregadas dinamicamente aqui -->
+  </ul>
+
+  <form id="form-tarefa">
+    <label for="descricao">Nova Tarefa:</label>
+    <input type="text" id="descricao" name="descricao" required>
+    <button type="submit">Adicionar Tarefa</button>
+  </form>
+
+  <script>
+    // Função para carregar dinamicamente as tarefas
+    async function carregarTarefas() {
+      const listaTarefas = document.getElementById('tarefas-lista');
+      
+      // Limpa a lista antes de recarregar
+      listaTarefas.innerHTML = '';
+
+      try {
+        // Faz uma requisição ao backend para obter a lista de tarefas
+        const response = await fetch('/tarefas');
+        const tarefas = await response.json();
+
+        // Adiciona as tarefas à lista
+        tarefas.forEach(tarefa => {
+          const li = criarElementoTarefa(tarefa);
+          listaTarefas.appendChild(li);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar tarefas:', error);
+      }
+    }
+
+    // Função para criar elemento de tarefa
+    function criarElementoTarefa(tarefa) {
+      const li = document.createElement('li');
+      li.textContent = tarefa.descricao;
+
+      // Adiciona botão para marcar como concluída
+      const btnConcluir = document.createElement('button');
+      btnConcluir.textContent = 'Concluir';
+      btnConcluir.addEventListener('click', async () => {
+        await marcarComoConcluida(tarefa.id);
+        carregarTarefas();
+      });
+      li.appendChild(btnConcluir);
+
+      // Adiciona botão para excluir tarefa
+      const btnExcluir = document.createElement('button');
+      btnExcluir.textContent = 'Excluir';
+      btnExcluir.addEventListener('click', async () => {
+        await excluirTarefa(tarefa.id);
+        carregarTarefas();
+      });
+      li.appendChild(btnExcluir);
+
+      return li;
+    }
+
+    // Função para marcar tarefa como concluída
+    async function marcarComoConcluida(id) {
+      try {
+        await fetch(`/tarefas/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ concluida: true }),
+        });
+      } catch (error) {
+        console.error('Erro ao marcar como concluída:', error);
+      }
+    }
+
+    // Função para excluir tarefa
+    async function excluirTarefa(id) {
+      try {
+        await fetch(`/tarefas/${id}`, {
+          method: 'DELETE',
+        });
+      } catch (error) {
+        console.error('Erro ao excluir tarefa:', error);
+      }
+    }
+
+    // Evento de envio do formulário para adicionar uma nova tarefa
+    document.getElementById('form-tarefa').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const descricaoInput = document.getElementById('descricao');
+      const descricao = descricaoInput.value;
+
+      try {
+        // Faz uma requisição ao backend para criar uma nova tarefa
+        await fetch('/tarefas', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ descricao }),
+        });
+
+        // Limpa o campo de entrada após adicionar a tarefa
+        descricaoInput.value = '';
+
+        // Recarrega a lista de tarefas
+        carregarTarefas();
+      } catch (error) {
+        console.error('Erro ao adicionar tarefa:', error);
+      }
+    });
+
+    // Carrega as tarefas ao carregar a página
+    carregarTarefas();
+  </script>
+</body>
+</html>
